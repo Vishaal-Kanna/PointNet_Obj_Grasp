@@ -20,7 +20,7 @@ import numpy as np
 from tqdm import tqdm
 import pptk
 
-test = True
+test = False
 device = 'cuda:0'
 
 if test == True:
@@ -105,7 +105,7 @@ blue = lambda x: '\033[94m' + x + '\033[0m'
 classifier = PointNetDenseCls(k=num_classes, feature_transform=opt.feature_transform)
 
 if test == True:
-    classifier.load_state_dict(torch.load("//home/vishaal/omniverse/new_1/pointnet.pytorch/utils/PN_gpg/gpg_model_10.pth"))
+    classifier.load_state_dict(torch.load(os.getcwd() + '../utils/PN_gpg/gpg_model_10.pth'))
 
 optimizer = optim.Adam(classifier.parameters(), lr=0.001, betas=(0.9, 0.999))
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
@@ -124,10 +124,10 @@ if test == True:
     objects_list = []
     gt_grasps = []
 
-    for item in sorted(os.listdir('/home/vishaal/Downloads/assets/dataset/grasping/test_objects')):
+    for item in sorted(os.listdir(os.getcwd() + '../dataset/grasping/test_objects')):
         base, _ = os.path.splitext(item)
         objects_list.append(base)
-        gt_grasps.append(np.loadtxt('/home/vishaal/Downloads/assets/dataset/grasping/gt_grasps/gt_{}.seg'.format(base)))
+        gt_grasps.append(np.loadtxt(os.getcwd() + '../dataset/grasping/gt_grasps/gt_{}.seg'.format(base)))
 
     j, data = next(enumerate(testdataloader, 0))
     points, choice, point_set_before_transform = data
@@ -184,17 +184,17 @@ if test == True:
         poses.append([0, 0, 0, 4 * np.pi / 2, 0.2* np.pi / 4, 1])
         v.set(lookat=[-0.0, -0.0, 0], r=0.5, theta=0.1, phi=0.1, show_axis=False)
         try:
-            os.makedirs('/home/vishaal/omniverse/new_1/pointnet.pytorch/utils/PN_op/{}'.format(objects_list[id]))
+            os.makedirs(os.getcwd() + '../utils/PN_op/{}'.format(objects_list[id]))
         except OSError:
             pass
-        v.record('/home/vishaal/omniverse/new_1/pointnet.pytorch/utils/PN_op/{}'.format(objects_list[id]), poses, 2 * np.arange(5), interp='linear')
+        v.record(os.getcwd() + '../utils/PN_op/{}'.format(objects_list[id]), poses, 2 * np.arange(5), interp='linear')
         # quit()
         if tot_no_grasp_pts == 0 or fp == 0:
             print(objects_list[id], ": No GT Grasp Points")
         else:
             print(objects_list[id], ":" , tp / (tp+fp))
     preds_all_obj = np.array(preds_all_obj)
-    np.save('/home/vishaal/omniverse/new_1/pointnet.pytorch/utils/PN_op_preds.npy', preds_all_obj)
+    np.save(os.getcwd() + '../utils/PN_op_preds.npy', preds_all_obj)
         # time.sleep(10)
     # print("Score : ", score/tot_no_pts)
 

@@ -164,18 +164,18 @@ class ShapeNetDataset(data.Dataset):
 
         self.datapath = []
         if test==True:
-            for item in sorted(os.listdir('/home/vishaal/Downloads/assets/dataset/grasping/test_objects')):
+            for item in sorted(os.listdir(os.getcwd() + '../dataset/grasping/test_objects')):
                 base, _ = os.path.splitext(item)
                 # print(base)
-                self.datapath.append('/home/vishaal/Downloads/assets/dataset/grasping/test_objects/' + base + '.pts')
+                self.datapath.append(os.getcwd() + '../dataset/grasping/test_objects/' + base + '.pts')
 
         else:
-            for item in sorted(os.listdir('/home/vishaal/Downloads/assets/dataset/grasping/selected_pc')):
+            for item in sorted(os.listdir(os.getcwd() + '../dataset/grasping/selected_pc')):
                 base, _ = os.path.splitext(item)
                 # print(base)
-                self.datapath.append(('/home/vishaal/Downloads/assets/dataset/grasping/selected_pc/' + base + '.pts',
-                                      '/home/vishaal/Downloads/assets/dataset/grasping/selected_collisions/plot_collision_' + base + '.seg',
-                                      '/home/vishaal/Downloads/assets/dataset/grasping/gt_grasps/gt_' + base + '.seg'))
+                self.datapath.append((os.getcwd() + '../dataset/grasping/selected_pc/' + base + '.pts',
+                                      os.getcwd() + '../dataset/grasping/selected_collisions/plot_collision_' + base + '.seg',
+                                      os.getcwd() + '../dataset/grasping/gt_grasps/gt_' + base + '.seg'))
 
     def __getitem__(self, index):
         fn = self.datapath[index]
@@ -198,7 +198,7 @@ class ShapeNetDataset(data.Dataset):
         choice = np.random.choice(point_set.shape[0], self.npoints, replace=True)
         # choice = np.load('/home/vishaal/omniverse/new_1/pointnet.pytorch/utils/choice.npy')
         if self.test == True:
-            choice = np.load('/home/vishaal/omniverse/new_1/pointnet.pytorch/utils/choice/choice_{}.npy'.format(index))
+            choice = np.load(os.getcwd() + '../utils/choice/choice_{}.npy'.format(index))
 
         # resample
         point_set = point_set[choice, :]
